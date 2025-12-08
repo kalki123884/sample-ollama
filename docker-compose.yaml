@@ -10,6 +10,18 @@ services:
     restart: unless-stopped
     networks:
       - n8n-network
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=n8npassword
+      - POSTGRES_DB=n8n_chat
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - n8n-network
 
   n8n:
     image: n8nio/n8n:latest
@@ -31,6 +43,7 @@ services:
 volumes:
   ollama_models:
   n8n_data:
+  pg_data:
 
 networks:
   n8n-network:
