@@ -11,17 +11,30 @@ services:
     networks:
       - n8n-network
   postgres:
-    image: postgres:16
+    image: pgvector/pgvector:pg16  # Has pgvector built-in
     container_name: postgres
     environment:
-      - POSTGRES_USER=n8n
-      - POSTGRES_PASSWORD=n8npassword
-      - POSTGRES_DB=n8n_chat
+      POSTGRES_USER: n8n
+      POSTGRES_PASSWORD: n8n123
+      POSTGRES_DB: n8n_vector
+    ports:  # Optional, for local testing only
+      - "5432:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pgvector_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
       - n8n-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n_vector"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  n8n:
+    # ... your existing n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 
   n8n:
     image: n8nio/n8n:latest
@@ -43,7 +56,7 @@ services:
 volumes:
   ollama_models:
   n8n_data:
-  pg_data:
+  pgvector_data:
 
 networks:
   n8n-network:
