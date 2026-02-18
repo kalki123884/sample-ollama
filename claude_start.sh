@@ -7,6 +7,6 @@ fi
 curl -fsSL https://claude.ai/install.sh | bash -s stable
 curl -fsSL https://ollama.com/install.sh | sh
 #docker exec -it ollama ollama pull qwen2.5:1.5b
-ollama pull qwen2.5:1.5b
+ollama pull qwen3:8b
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && source ~/.bashrc
 echo "The script execition completed"
